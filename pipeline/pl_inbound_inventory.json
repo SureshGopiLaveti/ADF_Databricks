@@ -143,7 +143,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "File arrival",
+						"activity": "completed file name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -169,22 +169,106 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"currentday": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))}"
+							"currentday": {
+								"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'),variables('Completed file name'))}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
+						"type": "DatasetReference",
+						"parameters": {
+							"currentday": {
+								"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'),'/Archive')}",
+								"type": "Expression"
+							}
 						}
 					}
 				]
+			},
+			{
+				"name": "completed file name",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "File arrival",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Completed file name",
+					"value": {
+						"value": "@activity('Filter1').output.Value[0].name",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Failed upon moving completed file to archive",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Moving completed file to archive folder",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": {
+						"value": "@activity('Moving completed file to archive folder').output",
+						"type": "Expression"
+					},
+					"errorCode": {
+						"value": "@activity('Moving completed file to archive folder').output",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
 			"Completed existence": {
 				"type": "Integer"
+			},
+			"Completed file name": {
+				"type": "String"
 			}
 		},
 		"annotations": []
