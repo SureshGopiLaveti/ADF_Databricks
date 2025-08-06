@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(variables('fileexists'),bool(1))",
+						"value": "@greater(variables('Completed files count'),0)",
 						"type": "Expression"
 					},
 					"activities": [
@@ -42,6 +42,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -50,8 +51,8 @@
 							}
 						},
 						{
-							"name": "Atleast 1 file exists",
-							"type": "SetVariable",
+							"name": "If Condition1",
+							"type": "IfCondition",
 							"dependsOn": [
 								{
 									"activity": "Metadata_files_existence",
@@ -60,36 +61,54 @@
 									]
 								}
 							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "fileexists",
-								"value": {
+								"expression": {
 									"value": "@activity('Metadata_files_existence').output.exists",
 									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Filter1",
-							"type": "Filter",
-							"dependsOn": [
-								{
-									"activity": "Metadata_files_existence",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"items": {
-									"value": "@activity('Metadata_files_existence').output.childItems",
-									"type": "Expression"
-								}
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Filter1",
+										"type": "Filter",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"items": {
+												"value": "@activity('Metadata_files_existence').output.childItems",
+												"type": "Expression"
+											},
+											"condition": {
+												"value": "@contains(item().name,'.completed')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set variable1",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "Filter1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "Completed files count",
+											"value": {
+												"value": "@activity('Filter1').output.FilteredItemsCount",
+												"type": "Expression"
+											}
+										}
+									}
+								]
 							}
 						}
 					],
@@ -124,8 +143,8 @@
 			"fileexists": {
 				"type": "Boolean"
 			},
-			"FilesNames": {
-				"type": "Array"
+			"Completed files count": {
+				"type": "Integer"
 			}
 		},
 		"annotations": []
