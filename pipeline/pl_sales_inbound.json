@@ -36,6 +36,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -226,6 +227,43 @@
 						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "DeletecompleteFile",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Shared/Sales_Data/python_notebooks/Sales_Data_processing",
+					"baseParameters": {
+						"Environemnt": "qa"
+					},
+					"libraries": [
+						{
+							"pypi": {
+								"package": "request"
+							}
+						}
+					]
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_Databricks_note_book_one",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
