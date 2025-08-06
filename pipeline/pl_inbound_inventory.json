@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(variables('Completed files count'),0)",
+						"value": "@greater(variables('Completed existence'),0)",
 						"type": "Expression"
 					},
 					"activities": [
@@ -101,7 +101,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"variableName": "Completed files count",
+											"variableName": "Completed existence",
 											"value": {
 												"value": "@activity('Filter1').output.FilteredItemsCount",
 												"type": "Expression"
@@ -137,13 +137,53 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Moving completed file to archive folder",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "File arrival",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
+						"type": "DatasetReference",
+						"parameters": {
+							"currentday": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))}"
+						}
+					}
+				]
 			}
 		],
 		"variables": {
-			"fileexists": {
-				"type": "Boolean"
-			},
-			"Completed files count": {
+			"Completed existence": {
 				"type": "Integer"
 			}
 		},
