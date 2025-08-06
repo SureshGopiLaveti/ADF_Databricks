@@ -1,0 +1,133 @@
+{
+	"name": "pl_inbound_inventory",
+	"properties": {
+		"activities": [
+			{
+				"name": "File arrival",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('fileexists'),bool(1))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Metadata_files_existence",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.00:50:00",
+								"retry": 10,
+								"retryIntervalInSeconds": 300,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
+									"type": "DatasetReference",
+									"parameters": {
+										"currentday": {
+											"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))}",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"exists",
+									"childItems"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Atleast 1 file exists",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Metadata_files_existence",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fileexists",
+								"value": {
+									"value": "@activity('Metadata_files_existence').output.exists",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Filter1",
+							"type": "Filter",
+							"dependsOn": [
+								{
+									"activity": "Metadata_files_existence",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Metadata_files_existence').output.childItems",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "0.00:50:00"
+				}
+			},
+			{
+				"name": "failed due to no file existence",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "File arrival",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": {
+						"value": "@activity('Metadata_files_existence').output",
+						"type": "Expression"
+					},
+					"errorCode": {
+						"value": "@activity('Metadata_files_existence').output",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"fileexists": {
+				"type": "Boolean"
+			},
+			"FilesNames": {
+				"type": "Array"
+			}
+		},
+		"annotations": []
+	}
+}
