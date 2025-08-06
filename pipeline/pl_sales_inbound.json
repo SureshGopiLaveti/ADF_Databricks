@@ -230,7 +230,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "sales_data_note_book",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
