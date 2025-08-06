@@ -1,12 +1,15 @@
 {
-	"name": "ds_inventory_inbbound_yearmonthday_dynamic",
+	"name": "ds_complete_file_source",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_storage",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"current_day": {
+			"directory": {
+				"type": "string"
+			},
+			"file_name": {
 				"type": "string"
 			}
 		},
@@ -15,96 +18,80 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": {
-					"value": "@dataset().current_day",
+				"fileName": {
+					"value": "@dataset().file_name",
 					"type": "Expression"
 				},
-				"fileSystem": "inboundinventory"
+				"folderPath": {
+					"value": "@dataset().directory",
+					"type": "Expression"
+				},
+				"fileSystem": "inbound"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
+			"firstRowAsHeader": false,
 			"quoteChar": "\""
 		},
 		"schema": [
 			{
-				"name": "storeId",
 				"type": "String"
 			},
 			{
-				"name": "busday",
 				"type": "String"
 			},
 			{
-				"name": "WMkeyN1",
 				"type": "String"
 			},
 			{
-				"name": "saparticle",
 				"type": "String"
 			},
 			{
-				"name": "promo",
 				"type": "String"
 			},
 			{
-				"name": "channel",
 				"type": "String"
 			},
 			{
-				"name": "type",
 				"type": "String"
 			},
 			{
-				"name": "normamt",
 				"type": "String"
 			},
 			{
-				"name": "saleamt",
 				"type": "String"
 			},
 			{
-				"name": "qty",
 				"type": "String"
 			},
 			{
-				"name": "uom",
 				"type": "String"
 			},
 			{
-				"name": "currency",
 				"type": "String"
 			},
 			{
-				"name": "grouping code",
 				"type": "String"
 			},
 			{
-				"name": "13-digit gln",
 				"type": "String"
 			},
 			{
-				"name": "supplier",
 				"type": "String"
 			},
 			{
-				"name": "purchase group",
 				"type": "String"
 			},
 			{
-				"name": "item1_desc",
 				"type": "String"
 			},
 			{
-				"name": "item2_desc",
 				"type": "String"
 			},
 			{
-				"name": "shlflbl1_colr_desc",
 				"type": "String"
 			},
 			{
-				"name": "barcode",
 				"type": "String"
 			}
 		]

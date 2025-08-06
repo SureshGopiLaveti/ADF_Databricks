@@ -30,8 +30,8 @@
 									"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
 									"type": "DatasetReference",
 									"parameters": {
-										"currentday": {
-											"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))}",
+										"current_day": {
+											"value": "@concat(formatDateTime(utcNow(),'yyyy/MM/dd'))",
 											"type": "Expression"
 										}
 									}
@@ -192,11 +192,15 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
+						"referenceName": "ds_complete_file_source",
 						"type": "DatasetReference",
 						"parameters": {
-							"currentday": {
-								"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'),variables('Completed file name'))}",
+							"directory": {
+								"value": "@formatDateTime(utcNow(),'yyyy/MM/dd')",
+								"type": "Expression"
+							},
+							"file_name": {
+								"value": "@variables('Completed file name')",
 								"type": "Expression"
 							}
 						}
@@ -204,11 +208,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_inventory_inbbound_yearmonthday_dynamic",
+						"referenceName": "ds_complete_file_source",
 						"type": "DatasetReference",
 						"parameters": {
-							"currentday": {
-								"value": "@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'),'/Archive')}",
+							"directory": {
+								"value": "@concat(formatDateTime(utcNow(),'yyyy/MM/dd'),'/Archieve')",
+								"type": "Expression"
+							},
+							"file_name": {
+								"value": "@variables('Completed file name')",
 								"type": "Expression"
 							}
 						}
