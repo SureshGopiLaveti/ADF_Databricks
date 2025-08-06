@@ -1,0 +1,9 @@
+{
+	"name": "adf-regrs-devv",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "96badf0f-9b15-4a6e-acee-8b8e10886a84",
+		"tenantId": "bcc0152e-287e-4663-92b1-2fac8f6e3db7"
+	}
+}
