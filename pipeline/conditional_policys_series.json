@@ -14,13 +14,13 @@
 				"typeProperties": {
 					"variableName": "pipeline_name",
 					"value": {
-						"value": "@pipeline().Pipeline",
+						"value": "@string('Srinivas')",
 						"type": "Expression"
 					}
 				}
 			},
 			{
-				"name": "pipeline_values",
+				"name": "pipeline_id",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -36,7 +36,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "pipeline_id ",
+					"variableName": "pipeline_id",
 					"value": {
 						"value": "@int('abc')",
 						"type": "Expression"
@@ -44,11 +44,11 @@
 				}
 			},
 			{
-				"name": "Storing_Error_Message",
+				"name": "Error_Message",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "pipeline_values",
+						"activity": "pipeline_id",
 						"dependencyConditions": [
 							"Skipped",
 							"Failed"
@@ -63,7 +63,7 @@
 				"typeProperties": {
 					"variableName": "Error_Message",
 					"value": {
-						"value": "@concat(activity('pipeline_name').Error.message,'|',\nactivity('pipeline_values').Error.message)",
+						"value": "@concat(activity('pipeline_name')?.Error?.message,'|',\nactivity('pipeline_id')?.Error?.message)",
 						"type": "Expression"
 					}
 				}
@@ -76,7 +76,7 @@
 			"pipeline_name": {
 				"type": "String"
 			},
-			"pipeline_id ": {
+			"pipeline_id": {
 				"type": "Integer"
 			}
 		},
