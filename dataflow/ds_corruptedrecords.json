@@ -1,0 +1,34 @@
+{
+	"name": "ds_corruptedrecords",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_corrupted_records_source",
+						"type": "DatasetReference"
+					},
+					"name": "corruptedCSVSource"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          name as string,",
+				"          salary as integer",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> corruptedCSVSource",
+				"corruptedCSVSource split(salary  < 32768 && salary > -32768,",
+				"     disjoint: false) ~> split1@(corruptedRecords, GoodRecords)"
+			]
+		}
+	}
+}
