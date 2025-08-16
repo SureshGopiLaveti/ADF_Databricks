@@ -1,0 +1,85 @@
+{
+	"name": "conditional_policys_series",
+	"properties": {
+		"activities": [
+			{
+				"name": "pipeline_name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipeline_name",
+					"value": {
+						"value": "@pipeline().Pipeline",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "pipeline_values",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "pipeline_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipeline_id ",
+					"value": {
+						"value": "@int('abc')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Storing_Error_Message",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "pipeline_values",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Error_Message",
+					"value": {
+						"value": "@concat(activity('pipeline_name').Error.message,'|',\nactivity('pipeline_values').Error.message)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Error_Message": {
+				"type": "String"
+			},
+			"pipeline_name": {
+				"type": "String"
+			},
+			"pipeline_id ": {
+				"type": "Integer"
+			}
+		},
+		"annotations": []
+	}
+}
