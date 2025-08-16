@@ -1,0 +1,19 @@
+{
+	"name": "ds_json_outbound",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "jsonOutbound",
+				"fileSystem": "inbound"
+			}
+		},
+		"schema": {}
+	}
+}

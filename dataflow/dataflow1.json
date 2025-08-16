@@ -1,0 +1,59 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_test_csv",
+						"type": "DatasetReference"
+					},
+					"name": "testjsondata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_json_outbound",
+						"type": "DatasetReference"
+					},
+					"name": "jsonOutbound"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "groupingPurchasesOfAllUsers"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          custId as string,",
+				"          custName as string,",
+				"          itemName as string,",
+				"          quantity as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> testjsondata",
+				"testjsondata derive(purchases = @(itemName=itemName,",
+				"          quantity=quantity)) ~> derivedColumn1",
+				"derivedColumn1 aggregate(groupBy(custId,",
+				"          custName),",
+				"     purchases = collect(purchases)) ~> groupingPurchasesOfAllUsers",
+				"groupingPurchasesOfAllUsers sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['csv_to_json_converted'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> jsonOutbound"
+			]
+		}
+	}
+}
