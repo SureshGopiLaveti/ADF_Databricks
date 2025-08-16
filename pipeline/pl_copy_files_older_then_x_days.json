@@ -1,5 +1,5 @@
 {
-	"name": "pl_delete_files_older_then_x_days",
+	"name": "pl_copy_files_older_then_x_days",
 	"properties": {
 		"activities": [
 			{
