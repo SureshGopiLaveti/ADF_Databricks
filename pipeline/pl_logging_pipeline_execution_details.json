@@ -1,6 +1,62 @@
 {
 	"name": "pl_logging_pipeline_execution_details",
 	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_sql_database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "Insert into [dbo].[pipeline_logs]\n(\n    datafactory_name,\n    pipeline_name,\n    pipeline_groupId,\n    pipeline_runId,\n    pipeline_triggerId,\n    number_column\n)\n\nValues (\n         '@{pipeline().DataFactory}',\n         '@{pipeline().Pipeline}',\n         '@{pipeline().GroupId}',\n         '@{pipeline().RunId}',\n         '@{pipeline().TriggerId}',\n         @variables('int_variable')\n\n)",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"variables": {
+			"pipelineDetails": {
+				"type": "String"
+			},
+			"int_variable": {
+				"type": "Integer",
+				"defaultValue": 123
+			}
+		},
 		"annotations": []
 	}
 }
