@@ -1,0 +1,53 @@
+{
+	"name": "faltten_ array",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "employees_csv",
+						"type": "DatasetReference"
+					},
+					"name": "employeesCSV"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "Groupingslarys"
+				},
+				{
+					"name": "Flatteningarray"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as string,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          EMAIL as string,",
+				"          PHONE_NUMBER as string,",
+				"          HIRE_DATE as string,",
+				"          JOB_ID as string,",
+				"          SALARY as string,",
+				"          COMMISSION_PCT as string,",
+				"          MANAGER_ID as string,",
+				"          DEPARTMENT_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> employeesCSV",
+				"employeesCSV aggregate(groupBy(DEPARTMENT_ID),",
+				"     employee_names = collect(FIRST_NAME)) ~> Groupingslarys",
+				"Groupingslarys foldDown(unroll(employee_names),",
+				"     mapColumn(",
+				"          DEPARTMENT_ID,",
+				"          employee_names",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> Flatteningarray"
+			]
+		}
+	}
+}
