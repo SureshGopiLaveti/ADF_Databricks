@@ -12,7 +12,7 @@
 				}
 			},
 			{
-				"name": "Script1",
+				"name": "pipeline_logging_script",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -39,7 +39,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "Insert into [dbo].[pipeline_logs]\n(\n    datafactory_name,\n    pipeline_name,\n    pipeline_groupId,\n    pipeline_runId,\n    pipeline_triggerId,\n    number_column\n)\n\nValues (\n         '@{pipeline().DataFactory}',\n         '@{pipeline().Pipeline}',\n         '@{pipeline().GroupId}',\n         '@{pipeline().RunId}',\n         '@{pipeline().TriggerId}',\n         @variables('int_variable')\n\n)",
+								"value": "Insert into [dbo].[pipeline_logs]\n(\n    datafactory_name,\n    pipeline_name,\n    pipeline_groupId,\n    pipeline_runId,\n    pipeline_triggerId,\n    number_column\n)\n\nValues (\n         '@{pipeline().DataFactory}',\n         '@{pipeline().Pipeline}',\n         '@{pipeline().GroupId}',\n         '@{pipeline().RunId}',\n         '@{pipeline().TriggerId}',\n         @{variables('int_variable')}\n\n)",
 								"type": "Expression"
 							}
 						}
