@@ -1,5 +1,5 @@
 {
-	"name": "ds_corruptedrecords",
+	"name": "df_corrupted_records_filteration",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -12,7 +12,22 @@
 					"name": "corruptedCSVSource"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ls_sql_database",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_tbl_corrupted_records_destination",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "split1"
@@ -27,7 +42,37 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> corruptedCSVSource",
 				"corruptedCSVSource split(salary  < 32768 && salary > -32768,",
-				"     disjoint: false) ~> split1@(corruptedRecords, GoodRecords)"
+				"     disjoint: false) ~> split1@(goodRecords, CorruptedRecords)",
+				"split1@goodRecords sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as long,",
+				"          name as string,",
+				"          salary as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"split1@CorruptedRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as long,",
+				"          name as string,",
+				"          salary as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
 			]
 		}
 	}
