@@ -1,0 +1,7 @@
+{
+	"name": "AzureSqlDatabase454",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/7e49bd10-a374-42d1-8c7c-fe4738007ae5/resourceGroups/rsg-uk-west/providers/Microsoft.Sql/servers/sqslserver-regrs",
+		"groupId": "sqlServer"
+	}
+}
