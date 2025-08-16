@@ -1,0 +1,15 @@
+{
+	"name": "round_function_demo",
+	"properties": {
+		"variables": {
+			"salary": {
+				"type": "Integer",
+				"defaultValue": "100.30456"
+			},
+			"converted_values": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
