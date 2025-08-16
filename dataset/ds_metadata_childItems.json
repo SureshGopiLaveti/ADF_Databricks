@@ -1,0 +1,112 @@
+{
+	"name": "ds_metadata_childItems",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"fileSystem": "inbound"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "storeId",
+				"type": "String"
+			},
+			{
+				"name": "busday",
+				"type": "String"
+			},
+			{
+				"name": "WMkeyN1",
+				"type": "String"
+			},
+			{
+				"name": "saparticle",
+				"type": "String"
+			},
+			{
+				"name": "promo",
+				"type": "String"
+			},
+			{
+				"name": "channel",
+				"type": "String"
+			},
+			{
+				"name": "type",
+				"type": "String"
+			},
+			{
+				"name": "normamt",
+				"type": "String"
+			},
+			{
+				"name": "saleamt",
+				"type": "String"
+			},
+			{
+				"name": "qty",
+				"type": "String"
+			},
+			{
+				"name": "uom",
+				"type": "String"
+			},
+			{
+				"name": "currency",
+				"type": "String"
+			},
+			{
+				"name": "grouping code",
+				"type": "String"
+			},
+			{
+				"name": "13-digit gln",
+				"type": "String"
+			},
+			{
+				"name": "supplier",
+				"type": "String"
+			},
+			{
+				"name": "purchase group",
+				"type": "String"
+			},
+			{
+				"name": "item1_desc",
+				"type": "String"
+			},
+			{
+				"name": "item2_desc",
+				"type": "String"
+			},
+			{
+				"name": "shlflbl1_colr_desc",
+				"type": "String"
+			},
+			{
+				"name": "barcode",
+				"type": "String"
+			}
+		]
+	}
+}
