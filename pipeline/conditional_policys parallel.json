@@ -1,5 +1,5 @@
 {
-	"name": "conditional_policys",
+	"name": "conditional_policys parallel",
 	"properties": {
 		"activities": [
 			{
@@ -59,19 +59,28 @@
 				}
 			},
 			{
-				"name": "Wait2",
-				"type": "Wait",
+				"name": "Error_message",
+				"type": "SetVariable",
 				"dependsOn": [
 					{
 						"activity": "Wait1",
 						"dependencyConditions": [
-							"Skipped"
+							"Skipped",
+							"Failed"
 						]
 					}
 				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 1
+					"variableName": "error_meesage",
+					"value": {
+						"value": "@replace(concat(activity('pipeline_value').Error.message,'|',\nactivity('pipeline_name').Error?.message\n),'|','')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -81,6 +90,9 @@
 			},
 			"pipeline_value": {
 				"type": "Integer"
+			},
+			"error_meesage": {
+				"type": "String"
 			}
 		},
 		"annotations": []
