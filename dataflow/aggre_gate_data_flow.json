@@ -1,0 +1,66 @@
+{
+	"name": "aggre_gate_data_flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "employees_csv",
+						"type": "DatasetReference"
+					},
+					"name": "employeesCSV"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_departments_csv",
+						"type": "DatasetReference"
+					},
+					"name": "departmentscsv"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as string,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          EMAIL as string,",
+				"          PHONE_NUMBER as string,",
+				"          HIRE_DATE as string,",
+				"          JOB_ID as string,",
+				"          SALARY as integer,",
+				"          COMMISSION_PCT as string,",
+				"          MANAGER_ID as string,",
+				"          DEPARTMENT_ID as integer",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> employeesCSV",
+				"source(output(",
+				"          DEPARTMENT_ID as short,",
+				"          DEPARTMENT_NAME as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> departmentscsv",
+				"employeesCSV, departmentscsv join(employeesCSV@DEPARTMENT_ID == departmentscsv@DEPARTMENT_ID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     partitionBy('hash', 1),",
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate(groupBy(DEPARTMENT_NAME),",
+				"     agg_salary = sum(SALARY)) ~> aggregate1"
+			]
+		}
+	}
+}
