@@ -1,0 +1,227 @@
+{
+	"name": "pl_copy_activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "inboundinventory/@{concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))}/@{'test_generated_data.csv'}"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.inventory_data"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ARTICLE_NUMBER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ARTICLE_NUMBER",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WIN_NUMBER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "WIN_NUMBER",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "SITE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SITE",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "MERCHANDISE_CATEGORY",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MERCHANDISE_CATEGORY",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "REPORT_DATE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "REPORT_DATE",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "BASE_UOM",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "BASE_UOM",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QUANTITY",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QUANTITY",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 10
+								}
+							},
+							{
+								"source": {
+									"name": "EXT_TIME",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EXT_TIME",
+									"type": "TimeSpan",
+									"physicalType": "time"
+								}
+							},
+							{
+								"source": {
+									"name": "SITE_CATEGORY",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SITE_CATEGORY",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MRP_TYPE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "MRP_TYPE",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HELD_STOCK",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HELD_STOCK",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 4,
+									"precision": 10
+								}
+							},
+							{
+								"source": {
+									"name": "GTIN_NUMBER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GTIN_NUMBER",
+									"type": "Int64",
+									"physicalType": "bigint"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_complete_file_source",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@concat('I0132/',formatDateTime(utcNow(),'yyyy/MM/dd'))",
+								"type": "Expression"
+							},
+							"file_name": "test_generated_data.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sql_db_dgrs",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

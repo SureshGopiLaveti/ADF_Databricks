@@ -1,0 +1,16 @@
+{
+	"name": "ds_sql_db_dgrs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "inventory_data"
+		}
+	}
+}
