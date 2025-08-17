@@ -6,13 +6,21 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_duplicateFile",
+						"referenceName": "ds_csv_file_with_duplicates",
 						"type": "DatasetReference"
 					},
 					"name": "duplicateDataSource"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_duplicatesRemovedData",
+						"type": "DatasetReference"
+					},
+					"name": "uniquedata"
+				}
+			],
 			"transformations": [
 				{
 					"name": "aggregate1"
@@ -29,8 +37,14 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> duplicateDataSource",
 				"duplicateDataSource aggregate(groupBy(custId),",
-				"     column1 = ERROR_FUNCTION(''),",
-				"          each(match(), ERROR_FUNCTION('') = ERROR_FUNCTION(''))) ~> aggregate1"
+				"     each(match(name != 'custId'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> uniquedata"
 			]
 		}
 	}
