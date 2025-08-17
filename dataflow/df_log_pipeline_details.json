@@ -1,0 +1,63 @@
+{
+	"name": "df_log_pipeline_details",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_dummy_file",
+						"type": "DatasetReference"
+					},
+					"name": "dummyfile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_log_details_outbound",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddingPipelineandDatafactoryName"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     pipline_name as string,",
+				"     DataFactoryName as string",
+				"}",
+				"source(output(",
+				"          dummy as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dummyfile",
+				"dummyfile derive(pipelineName = $pipline_name,",
+				"          DataFactoryName = $DataFactoryName) ~> AddingPipelineandDatafactoryName",
+				"AddingPipelineandDatafactoryName select(mapColumn(",
+				"          pipelineName,",
+				"          DataFactoryName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:[(concat('log_file_data',toString(currentDate('UTC'),'yyyy-MM-dd' )))],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
