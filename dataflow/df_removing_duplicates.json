@@ -1,18 +1,36 @@
 {
-	"name": "dataflow1",
+	"name": "df_removing_duplicates",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
-					"name": "source1"
+					"dataset": {
+						"referenceName": "ds_duplicateFile",
+						"type": "DatasetReference"
+					},
+					"name": "duplicateDataSource"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"source(output(",
+				"          custId as string,",
+				"          custName as string,",
+				"          itemName as string,",
+				"          quantity as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> duplicateDataSource",
+				"duplicateDataSource aggregate(groupBy(custId),",
+				"     column1 = ERROR_FUNCTION(''),",
+				"          each(match(), ERROR_FUNCTION('') = ERROR_FUNCTION(''))) ~> aggregate1"
 			]
 		}
 	}

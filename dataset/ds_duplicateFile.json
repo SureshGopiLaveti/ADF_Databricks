@@ -1,0 +1,40 @@
+{
+	"name": "ds_duplicateFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "csv_file_with_duplicate.csv",
+				"fileSystem": "inbound"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "custId",
+				"type": "String"
+			},
+			{
+				"name": "custName",
+				"type": "String"
+			},
+			{
+				"name": "itemName",
+				"type": "String"
+			},
+			{
+				"name": "quantity",
+				"type": "String"
+			}
+		]
+	}
+}
