@@ -33,26 +33,28 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_log_pipeline_details",
-						"type": "DataFlowReference",
-						"parameters": {
-							"pipline_name": {
-								"value": "@pipeline().Pipeline",
-								"type": "Expression"
-							},
-							"DataFactoryName": {
-								"value": "@pipeline().DataFactory",
-								"type": "Expression"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
 				}
 			}
 		],
+		"parameters": {
+			"pipeline_name": {
+				"type": "string",
+				"defaultValue": "pl_loggi]"
+			},
+			"DatafcatoryName": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
