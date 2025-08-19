@@ -1,0 +1,76 @@
+{
+	"name": "SCD1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_db_dgrs",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ARTICLE_NUMBER as string,",
+				"          WIN_NUMBER as integer,",
+				"          SITE as integer,",
+				"          MERCHANDISE_CATEGORY as string,",
+				"          REPORT_DATE as string,",
+				"          BASE_UOM as string,",
+				"          QUANTITY as decimal(10,0),",
+				"          EXT_TIME as string,",
+				"          SITE_CATEGORY as string,",
+				"          MRP_TYPE as string,",
+				"          HELD_STOCK as decimal(10,0),",
+				"          GTIN_NUMBER as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 alterRow(upsertIf(1==1)) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['ARTICLE_NUMBER'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ARTICLE_NUMBER,",
+				"          WIN_NUMBER,",
+				"          SITE,",
+				"          MERCHANDISE_CATEGORY,",
+				"          REPORT_DATE,",
+				"          BASE_UOM,",
+				"          QUANTITY,",
+				"          EXT_TIME,",
+				"          SITE_CATEGORY,",
+				"          MRP_TYPE,",
+				"          HELD_STOCK,",
+				"          GTIN_NUMBER",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
