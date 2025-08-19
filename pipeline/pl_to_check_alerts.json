@@ -1,0 +1,30 @@
+{
+	"name": "pl_to_check_alerts",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": {
+						"value": "@int('123')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"var": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
