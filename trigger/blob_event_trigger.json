@@ -9,11 +9,17 @@
 					"referenceName": "pl_sales_inbound",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "pl_event_based_trigger",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
-			"blobPathBeginsWith": "/inbound/blobs/",
+			"blobPathBeginsWith": "/inbound/blobs/2025/08/25/Inventory",
 			"ignoreEmptyBlobs": true,
 			"scope": "/subscriptions/7e49bd10-a374-42d1-8c7c-fe4738007ae5/resourceGroups/rsg-uk-west/providers/Microsoft.Storage/storageAccounts/regrsadls2dev",
 			"events": [
