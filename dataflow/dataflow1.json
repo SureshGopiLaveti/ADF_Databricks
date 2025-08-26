@@ -17,13 +17,16 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
 				"          ARTICLE_NUMBER as string,",
-				"          WIN_NUMBER as string,",
-				"          SITE as string,",
+				"          WIN_NUMBER as integer,",
+				"          SITE as integer,",
 				"          MERCHANDISE_CATEGORY as string,",
 				"          REPORT_DATE as string,",
 				"          BASE_UOM as string,",
@@ -37,7 +40,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Practice1",
-				"Practice1 derive(REPORT_DATE = toDate(REPORT_DATE,'dd-MM-yyyy')) ~> derivedColumn1"
+				"Practice1 derive(alter_column_reportDate = currentTimestamp()) ~> derivedColumn1",
+				"derivedColumn1 filter(contains([1,2,3,4], SITE)) ~> filter1"
 			]
 		}
 	}
