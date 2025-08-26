@@ -1,0 +1,44 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "Practice1",
+					"description": "Import data from DelimitedText1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ARTICLE_NUMBER as string,",
+				"          WIN_NUMBER as string,",
+				"          SITE as string,",
+				"          MERCHANDISE_CATEGORY as string,",
+				"          REPORT_DATE as string,",
+				"          BASE_UOM as string,",
+				"          QUANTITY as string,",
+				"          EXT_TIME as string,",
+				"          SITE_CATEGORY as string,",
+				"          MRP_TYPE as string,",
+				"          HELD_STOCK as string,",
+				"          GTIN_NUMBER as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Practice1",
+				"Practice1 derive(REPORT_DATE = toDate(REPORT_DATE,'dd-MM-yyyy')) ~> derivedColumn1"
+			]
+		}
+	}
+}

@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "test_generated_data.csv",
-				"folderPath": "I0132/2025/08/17",
+				"folderPath": "I0132/2025/08/26",
 				"fileSystem": "inboundinventory"
 			},
 			"columnDelimiter": ",",
