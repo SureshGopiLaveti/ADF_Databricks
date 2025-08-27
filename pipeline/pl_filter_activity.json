@@ -28,8 +28,6 @@
 			{
 				"name": "Set variable1",
 				"type": "SetVariable",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Filter1",
@@ -46,7 +44,7 @@
 				"typeProperties": {
 					"variableName": "filterOutput",
 					"value": {
-						"value": "@concat('I0132/2025/08/',formatDateTime(utcNow(),'dd'))",
+						"value": "@activity('Filter1').output.value",
 						"type": "Expression"
 					}
 				}
@@ -76,6 +74,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -101,7 +100,7 @@
 				]
 			},
 			"filterOutput": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []
