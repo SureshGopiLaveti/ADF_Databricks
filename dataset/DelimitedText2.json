@@ -1,0 +1,72 @@
+{
+	"name": "DelimitedText2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "I0132/2025/08/27",
+				"fileSystem": "inboundinventory"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ARTICLE_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "WIN_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "SITE",
+				"type": "String"
+			},
+			{
+				"name": "MERCHANDISE_CATEGORY",
+				"type": "String"
+			},
+			{
+				"name": "REPORT_DATE",
+				"type": "String"
+			},
+			{
+				"name": "BASE_UOM",
+				"type": "String"
+			},
+			{
+				"name": "QUANTITY",
+				"type": "String"
+			},
+			{
+				"name": "EXT_TIME",
+				"type": "String"
+			},
+			{
+				"name": "SITE_CATEGORY",
+				"type": "String"
+			},
+			{
+				"name": "MRP_TYPE",
+				"type": "String"
+			},
+			{
+				"name": "HELD_STOCK",
+				"type": "String"
+			},
+			{
+				"name": "GTIN_NUMBER",
+				"type": "String"
+			}
+		]
+	}
+}
