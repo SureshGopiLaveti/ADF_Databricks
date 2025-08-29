@@ -24,6 +24,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -57,17 +58,24 @@
 							"userProperties": [],
 							"typeProperties": {
 								"on": {
-									"value": "@item().name",
+									"value": "@tolower(item().name)",
 									"type": "Expression"
 								},
 								"cases": [
 									{
-										"value": "Employees.csv",
+										"value": "employees.csv",
 										"activities": [
 											{
 												"name": "Copy data1",
 												"type": "Copy",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Wait1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "0.12:00:00",
 													"retry": 0,
@@ -253,6 +261,15 @@
 														"type": "DatasetReference"
 													}
 												]
+											},
+											{
+												"name": "Wait1",
+												"type": "Wait",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"waitTimeInSeconds": 30
+												}
 											}
 										]
 									}
