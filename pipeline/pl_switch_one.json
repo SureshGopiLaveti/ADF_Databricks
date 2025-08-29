@@ -1,0 +1,296 @@
+{
+	"name": "pl_switch_one",
+	"properties": {
+		"activities": [
+			{
+				"name": "meta_data_of_the_inbound_folder",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_inbound_meta_data",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filter_only_employees_departments",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filter_only_employees_departments').output.Value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Switch1",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().name",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "Employees.csv",
+										"activities": [
+											{
+												"name": "Copy data1",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "DelimitedTextSource",
+														"storeSettings": {
+															"type": "AzureBlobFSReadSettings",
+															"recursive": true,
+															"enablePartitionDiscovery": false
+														},
+														"formatSettings": {
+															"type": "DelimitedTextReadSettings"
+														}
+													},
+													"sink": {
+														"type": "AzureSqlSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"mappings": [
+															{
+																"source": {
+																	"name": "EMPLOYEE_ID",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "EMPLOYEE_ID",
+																	"type": "Int32",
+																	"physicalType": "int"
+																}
+															},
+															{
+																"source": {
+																	"name": "FIRST_NAME",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "FIRST_NAME",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "LAST_NAME",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "LAST_NAME",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "EMAIL",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "EMAIL",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "PHONE_NUMBER",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "PHONE_NUMBER",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "HIRE_DATE",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "HIRE_DATE",
+																	"type": "DateTime",
+																	"physicalType": "date"
+																}
+															},
+															{
+																"source": {
+																	"name": "JOB_ID",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "JOB_ID",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "SALARY",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "SALARY",
+																	"type": "Decimal",
+																	"physicalType": "decimal",
+																	"scale": 2,
+																	"precision": 10
+																}
+															},
+															{
+																"source": {
+																	"name": "COMMISSION_PCT",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "COMMISSION_PCT",
+																	"type": "Decimal",
+																	"physicalType": "decimal",
+																	"scale": 2,
+																	"precision": 5
+																}
+															},
+															{
+																"source": {
+																	"name": "MANAGER_ID",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "MANAGER_ID",
+																	"type": "Int32",
+																	"physicalType": "int"
+																}
+															},
+															{
+																"source": {
+																	"name": "DEPARTMENT_ID",
+																	"type": "String",
+																	"physicalType": "String"
+																},
+																"sink": {
+																	"name": "DEPARTMENT_ID",
+																	"type": "Int32",
+																	"physicalType": "int"
+																}
+															}
+														],
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "ds_employees_data",
+														"type": "DatasetReference"
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "ds_employees_tbl",
+														"type": "DatasetReference"
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "filter_only_employees_departments",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "meta_data_of_the_inbound_folder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('meta_data_of_the_inbound_folder').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@or(startswith(item().name,'Employees')\n,startswith(item().name,'Departments' ))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"file_name": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
